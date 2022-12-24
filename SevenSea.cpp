@@ -7,7 +7,7 @@ using namespace std;
 #define MAX 100
 
 int mapSize = 11;
-char waterIcon = '~', shipIcon = 'X', enemyIcon = 'A', deathIcon = '#', obstacleIcon = '!', bulletIcon = '.', portalIcon = '@'; // icon game
+char waterIcon = '~', shipIcon = 'X', enemyIcon = 'A', deathIcon = '#', obstacleIcon = '!', bulletIcon = '.', portalIcon = '@', monsterIcon = '+' ; // icon game
 int shipPosX = 6, shipPosY = 9;																									// vi tri ban dau cua tau
 int shipStatus = 1;																												// 1, 9 = / -> 1
 																																// 2, 8 = _  -> 2
@@ -326,6 +326,30 @@ void enemyTurn()
 	}
 }
 
+void monsterTurn(){
+	for (int i = 0; i < mapSize; i++)
+			for (int j = 0; j < mapSize; j++)
+				visited[i][j] = false;
+	
+	for (int i = 0; i < mapSize; i++)
+		for (int j = 0; j < mapSize; j++){
+			if (visited[i][j] == false && map[i][j] == monsterIcon){
+					srand(time(0));
+					int tempx, tempy;
+					do {
+						tempx = rand() % 3 - 1;
+						tempy = rand() % 3 - 1;
+					} while (!isInMap(i + tempx, j + tempy) && map[i + tempx][j + tempy] != obstacleIcon 
+															&& map[i + tempx][j + tempy] != portalIcon
+															&& map[i + tempx][j + tempy] != deathIcon);
+					map[i][j] = waterIcon;
+					map[i + tempx][j + tempy] = monsterIcon;
+					visited[i + tempx][j + tempy] = true;
+			}
+			visited[i][j] = true;
+		}
+}
+
 int main()
 {
 
@@ -337,6 +361,8 @@ int main()
 	map[0][10] = portalIcon;
 	map[10][0] = portalIcon;
 	map[10][10] = portalIcon;
+
+	map[0][1] = monsterIcon;
 
 	map[6][1] = enemyIcon;
 	map[6][2] = enemyIcon;
@@ -373,6 +399,12 @@ int main()
 		sleep(1);
 
 		enemyTurn();
+		
+		clear();
+		updateMap();		
+		sleep(1);	
+		
+		monsterTurn();
 	}
 
 	if (win)
