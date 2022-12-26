@@ -8,7 +8,7 @@ using namespace std;
 
 int size = 11;
 char waterIcon = '~', shipIcon = 'X', enemyIcon = 'A', deathIcon = '#', obstacleIcon = '!', bulletIcon = '.', portalIcon = '@', monsterIcon = '+'; // icon game
-int shipPosX = 6, shipPosY = 9; // vi tri ban dau cua tau
+int shipPosX = 0, shipPosY = 1; // vi tri ban dau cua tau
 int shipStatus = 1; // 1, 9 = / -> 1
 				 	// 2, 8 = _  -> 2
 				 	// 3, 7 = \  -> 3
@@ -161,9 +161,7 @@ void bulletMove(int x, int y){
 	int bullet1X = shipPosX, bullet2X = shipPosX,
 	    bullet1Y = shipPosY, bullet2Y = shipPosY;
 	for (int i = 0; i < 3; i++){
-		if (bullet1Stop == false){
-			if (map[bullet1X][bullet1Y] != shipIcon && map[bullet1X][bullet1Y] != deathIcon)
-				map[bullet1X][bullet1Y] = waterIcon;
+		if (bullet1Stop == false && isInMap(bullet1X + x, bullet1Y + y)){
 			if (map[bullet1X + x][bullet1Y + y] != waterIcon){
 				if (map[bullet1X + x][bullet1Y + y] == monsterIcon)
 					bullet1Stop = true;	
@@ -176,10 +174,7 @@ void bulletMove(int x, int y){
 			bullet1Y += y;			
 		}
 		
-		if (bullet2Stop == false){
-			
-			if (map[bullet2X][bullet2Y] != shipIcon && map[bullet2X][bullet2Y] != deathIcon)
-				map[bullet2X][bullet2Y] = waterIcon;	
+		if (bullet2Stop == false && isInMap(bullet2X - x, bullet2Y - y)){	
 			if (map[bullet2X - x][bullet2Y - y] != waterIcon){
 				if (map[bullet2X - x][bullet2Y - y] == monsterIcon)
 					bullet2Stop = true;			
@@ -194,12 +189,11 @@ void bulletMove(int x, int y){
 		clear();
 		updateMap();
 		sleep(1);
-	}
-	// clear the last bullet
-	if (map[bullet1X][bullet1Y] != shipIcon && map[bullet1X][bullet1Y] != deathIcon)
+		if (map[bullet1X][bullet1Y] != shipIcon && map[bullet1X][bullet1Y] != deathIcon)
 			map[bullet1X][bullet1Y] = waterIcon;
-	if (map[bullet2X][bullet2Y] != shipIcon && map[bullet2X][bullet2Y] != deathIcon)
-			map[bullet2X][bullet2Y] = waterIcon;	
+		if (map[bullet2X][bullet2Y] != shipIcon && map[bullet2X][bullet2Y] != deathIcon)
+			map[bullet2X][bullet2Y] = waterIcon;
+	}
 }
 
 void fireCannon(){
@@ -341,7 +335,6 @@ int main(){
 	map[6][2] = enemyIcon;
 	map[2][5] = enemyIcon;
 	map[10][9] = enemyIcon;
-	map[1][2] = enemyIcon;
 
 	
 	map[5][9] = obstacleIcon;
@@ -390,6 +383,13 @@ int main(){
 	
 	return 0;
 }
+
+
+
+
+
+
+
 
 
 
