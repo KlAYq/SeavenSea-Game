@@ -248,11 +248,18 @@ void playerTurn(){
 			else { // tele
 				srand(time(0));
 				int tempx, tempy;
-				while (true){
+				int dx[8] = {-1, -1, -1,  0, 0,  1, 1, 1},
+			  	    dy[8] = {-1,  0,  1, -1, 1, -1, 0, 1};
+				bool badPos = true;
+				while (badPos){
 					tempx = rand() % size;
 					tempy = rand() % size;
-					if (map[tempx][tempy] == waterIcon)
-						break;
+					if (map[tempx][tempy] == waterIcon){
+						badPos = false;
+						for (int i = 0; i < 8; i++)
+							if (isInMap(tempx + dx[i], tempy + dy[i]) && map[tempx + dx[i]][tempy + dy[i]] == enemyIcon)
+								badPos = true;	
+					}
 				}
 				shipPosX = tempx;
 				shipPosY = tempy;
